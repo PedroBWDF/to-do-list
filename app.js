@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 
+//取用models資料夾的。index.js檔案的邏輯中會取用todo.js的modelName
 const db = require('./models')
 const Todo = db.Todo
 
