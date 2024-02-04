@@ -1,8 +1,18 @@
 const express = require('express')
 const app = express()
 
+const db = require('./models')
+const Todo = db.Todo
+
 app.get('/', (req, res) => {
   res.send('hey')
+})
+
+//測試應用程式與資料庫之間的連線
+app.get('/todos', (req, res) => {
+  return Todo.findAll()
+    .then((todos) => res.send({ todos }))
+    .catch((err) => res.status(422).json(err))
 })
 
 app.get('/todos', (req, res) => {
