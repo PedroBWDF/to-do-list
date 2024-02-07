@@ -1,12 +1,19 @@
 const express = require('express')
 const app = express()
 
+const { engine } = require('express-handlebars')
+
 //取用models資料夾的。index.js檔案的邏輯中會取用todo.js的modelName
 const db = require('./models')
 const Todo = db.Todo
 
+const port = 3000
+app.engine('.hbs', engine({ extname: '.hbs' }))
+app.set('view engine', '.hbs')
+app.set('views', './views')
+
 app.get('/', (req, res) => {
-  res.send('hey')
+  res.render('index')
 })
 
 //測試應用程式與資料庫之間的連線
