@@ -18,8 +18,11 @@ app.get('/', (req, res) => {
 
 //測試應用程式與資料庫之間的連線
 app.get('/todos', (req, res) => {
-  return Todo.findAll()
-    .then((todos) => res.send({ todos }))
+  return Todo.findAll({
+    attributes: ['id', 'name'],
+    raw: true
+  })
+    .then((todos) => res.render('todos', { todos }))
     .catch((err) => res.status(422).json(err))
 })
 
