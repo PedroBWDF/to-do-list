@@ -12,6 +12,9 @@ app.engine('.hbs', engine({ extname: '.hbs' }))
 app.set('view engine', '.hbs')
 app.set('views', './views')
 
+app.use(express.urlencoded({ extended: true }))
+//Express獲取傳送來的表單資料需要額外設定
+
 app.get('/', (req, res) => {
   res.render('index')
 })
@@ -19,7 +22,7 @@ app.get('/', (req, res) => {
 //測試應用程式與資料庫之間的連線
 app.get('/todos', (req, res) => {
   return Todo.findAll({
-    attributes: ['id', 'name'],
+    attributes: ['id', 'name'], //只選擇id跟name欄位
     raw: true
   })
     .then((todos) => res.render('todos', { todos }))
@@ -31,11 +34,14 @@ app.get('/todos', (req, res) => {
 })
 
 app.get('/todos/new', (req, res) => {
-  res.send('create todo')
+  return res.render('new')
 })
 
 app.post('/todos', (req, res) => {
-  res.send('add todo')
+  const name = req.body.name //取得new.hbs裡面action屬性定義表單發送過來的資料
+  return Todo.create({ name })
+    .then(() => res.redirect('/todos'))
+    .catch((err) => console.log(err))
 })
 
 app.get('/todos/:id', (req, res) => {
