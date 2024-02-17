@@ -5,6 +5,10 @@
     {{this.name}}
     <a href="./todos/{{ this.id }}">detail</a>
     <a href="/todos/{{this.id}}/edit">edit</a>
+    <form action="/todos/{{this.id}}?_method=DELETE" method="POST" style="display: inline;">
+      <button type="submit">delete</button>
+    </form>
+    {{!-- <a>只能發送GET請求，所以delete功能用form --}}
   </li>
   {{/each}}
 </ul>
