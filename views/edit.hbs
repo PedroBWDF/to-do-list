@@ -1,4 +1,6 @@
 <form action="/todos/{{todo.id}}?_method=PUT" method="POST">
+<input type="checkbox" name="isComplete" value="completed" {{#if todo.isComplete}} checked {{/if}}>
+{{!-- 如果this.isComplete為真，就渲染 --}}
   <input type="text" placeholder="please input name" name="name" value="{{todo.name}}">
   {{!-- 上面name="name"，第一個name是HTML屬性名稱，第二個name為表單資料的key名(可讓後端用req.body.name取得值) --}}
   <button type="submit">Save</button>

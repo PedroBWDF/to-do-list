@@ -26,9 +26,15 @@ app.get('/', (req, res) => {
 //測試應用程式與資料庫之間的連線
 app.get('/todos', (req, res) => {
   return Todo.findAll({
-    attributes: ['id', 'name'], //只選擇id跟name欄位
+    attributes: ['id', 'name', 'isComplete'], //只選擇id跟name欄位
     raw: true
   })
+
+    // .then((todos) => {
+    //   console.log(todos); // 觀察輸出結果
+    //   res.render('todos', { todos });
+    // })
+
     .then((todos) => res.render('todos', { todos }))
     .catch((err) => res.status(422).json(err))
 })
@@ -52,10 +58,10 @@ app.get('/todos/:id', (req, res) => {
   const id = req.params.id
 
   return Todo.findByPk(id, {
-    attributes: ['id', 'name'],
+    attributes: ['id', 'name', 'isComplete'],
     raw:true
   })
-  .then((todo) => res.render('todo', {todo}))
+  .then((todo) => res.render('todo', { todo }))
   .catch((err) => console.log(err))
 })
 
@@ -63,17 +69,17 @@ app.get('/todos/:id/edit', (req, res) => {
   const id = req.params.id
 
   return Todo.findByPk(id, {
-    attributes: ['id', 'name'],
+    attributes: ['id', 'name', 'isComplete'],
     raw: true //返回JavaScript物件給樣板引擎而不是返回Sequelize Model instance
   })
     .then((todo) => res.render('edit', { todo }))
 })
 
 app.put('/todos/:id', (req, res) => {
-  const body = req.body
+  const { name, isComplete} = req.body
   const id = req.params.id
 
-  return Todo.update({ name: body.name }, { where: { id }})
+  return Todo.update({ name, isComplete: isComplete === 'completed' }, { where: { id } }) //若有勾選checkbox，則isComplete值為completed，判斷結果為true
   .then(() => res.redirect(`/todos/${id}`))
 })
 
