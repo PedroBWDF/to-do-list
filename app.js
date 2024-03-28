@@ -1,4 +1,6 @@
 const express = require('express')
+const flash = require('connect-flash')
+const session = require('express-session')
 const app = express()
 
 const { engine } = require('express-handlebars')
@@ -19,6 +21,13 @@ app.use(express.urlencoded({ extended: true }))
 app.use(methodOverride('_method'))
 //HTML原生的form方法只能讓browser使用GET和POST來提交資料，要用PUT，需要method-override套件
 
+app.use(session({
+  secret: 'ThisIsSecret',
+  resave: false,
+  saveUninitialized: false
+}))
+app.use(flash())
+
 app.get('/', (req, res) => {
   res.render('index')
 })
@@ -34,13 +43,8 @@ app.get('/todos', (req, res) => {
     //   console.log(todos); // 觀察輸出結果
     //   res.render('todos', { todos });
     // })
-
-    .then((todos) => res.render('todos', { todos }))
+    .then((todos) => res.render('todos', { todos, message: req.flash('success') }))
     .catch((err) => res.status(422).json(err))
-})
-
-app.get('/todos', (req, res) => {
-  res.send('get all todos')
 })
 
 app.get('/todos/new', (req, res) => {
@@ -50,8 +54,10 @@ app.get('/todos/new', (req, res) => {
 app.post('/todos', (req, res) => {
   const name = req.body.name //取得new.hbs裡面action屬性定義表單發送過來的資料
   return Todo.create({ name })
-    .then(() => res.redirect('/todos'))
-    .catch((err) => console.log(err))
+    .then(() => {
+      req.flash('success', '新增成功!') //success為key(可自定義)，第2個參數為value
+      return res.redirect('/todos')
+    })
 })
 
 app.get('/todos/:id', (req, res) => {
@@ -61,7 +67,7 @@ app.get('/todos/:id', (req, res) => {
     attributes: ['id', 'name', 'isComplete'],
     raw:true
   })
-  .then((todo) => res.render('todo', { todo }))
+    .then((todo) => res.render('todo', { todo, message: req.flash('success') }))
   .catch((err) => console.log(err))
 })
 
@@ -76,18 +82,24 @@ app.get('/todos/:id/edit', (req, res) => {
 })
 
 app.put('/todos/:id', (req, res) => {
-  const { name, isComplete} = req.body
+  const { name, isComplete } = req.body
   const id = req.params.id
 
   return Todo.update({ name, isComplete: isComplete === 'completed' }, { where: { id } }) //若有勾選checkbox，則isComplete值為completed，判斷結果為true
-  .then(() => res.redirect(`/todos/${id}`))
+    .then(() => {
+      req.flash('success', '更新成功!') //success為key(可自定義)，第2個參數為value
+      return res.redirect(`/todos/${id}`)
+    })
 })
 
 app.delete('/todos/:id', (req, res) => {
   const id = req.params.id
 
   return Todo.destroy({ where: { id }})
-  .then(() => res.redirect('/todos'))
+    .then(() => {
+      req.flash('success', '刪除成功!') //success為key(可自定義)，第2個參數為value
+      return res.redirect('/todos')
+    })
 })
 
 app.listen(3000, () => {
