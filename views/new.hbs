@@ -1,6 +1,4 @@
-{{#if error}}
-<div>{{error}}</div>
-{{/if}}
+{{> message}}
 <form action="/todos" method="POST">
   <input type="text" placeholder="name" name="name"> 
   {{!-- name屬性是HTTP傳送資料時的名稱，會被放在HTTP的request body裡 --}}

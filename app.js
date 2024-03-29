@@ -6,6 +6,8 @@ const app = express()
 const { engine } = require('express-handlebars')
 const methodOverride = require('method-override')
 const router = require('./routes') // 引用路由器
+const messageHandler = require('./middlewares/message-handler')
+const errorHandler = require('./middlewares/error-handler')
 const port = 3000
 
 //取用models資料夾的。index.js檔案的邏輯中會取用todo.js的modelName
@@ -28,6 +30,15 @@ app.use(session({
   saveUninitialized: false
 }))
 app.use(flash())
+
+
+app.use(messageHandler)
+app.use(router)// 將 request 導入路由器
+app.use(errorHandler)
+
+app.listen(3000, () => {
+  console.log(`App is running on <http://localhost>:${port}`)
+})
 
 // app.get('/', (req, res) => {
 //   res.render('index')
@@ -170,9 +181,3 @@ app.use(flash())
 //     return res.redirect('back')
 //   }
 // })
-
-app.use(router)// 將 request 導入路由器
-
-app.listen(3000, () => {
-  console.log('App is running on port 3000')
-})

@@ -1,6 +1,4 @@
-{{#if message}}
-<div>{{message}}</div>
-{{/if}}
+{{> message}}
 <p><input type="checkbox" disabled {{#if this.isComplete}} checked {{/if}}> 
 {{ todo.name }}</p> 
 {{!-- 如果this.isComplete為真，就渲染；disabled因為只有顯示功能 --}}
