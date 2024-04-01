@@ -6,12 +6,19 @@ const Todo = db.Todo
 
 //把原本的'/todos'改成'/'，因為在index檔案已用'/todos'作為總路由
 router.get('/', (req, res) => {
+  const page = parseInt(req.query.page) || 1
+  const limit = 10
 
   return Todo.findAll({
     attributes: ['id', 'name', 'isComplete'], //只傳送指定的id、name、isComplete
     raw: true
   })
-    .then((todos) => res.render('todos', { todos }))
+    .then((todos) => res.render('todos', {  //res.render第二個參數定義的值在hbs用{{}}來取用
+      todos: todos.slice((page - 1) * limit, page * limit),
+      prev: page > 1 ? page - 1 : page,
+      next: page + 1,
+      page
+    }))
     .catch((error) => {
       error.errorMessage = '資料取得失敗:('
       next(error)
