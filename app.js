@@ -3,6 +3,12 @@ const flash = require('connect-flash')
 const session = require('express-session')
 const app = express()
 
+//取用dotenv設定檔
+if (process.env.NODE_ENV === 'development') {
+  require('dotenv').config()
+}
+console.log(process.env.NODE_ENV)
+
 const { engine } = require('express-handlebars')
 const methodOverride = require('method-override')
 const router = require('./routes') // 引用路由器
@@ -25,7 +31,7 @@ app.use(methodOverride('_method'))
 //HTML原生的form方法只能讓browser使用GET和POST來提交資料，要用PUT，需要method-override套件
 
 app.use(session({
-  secret: 'ThisIsSecret',
+  secret: process.env.SESSION_SECRET, //透過環境變數取得
   resave: false,
   saveUninitialized: false
 }))
