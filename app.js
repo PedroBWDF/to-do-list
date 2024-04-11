@@ -3,6 +3,9 @@ const flash = require('connect-flash')
 const session = require('express-session')
 const app = express()
 
+// require('dotenv').config()
+// console.log(process.env)
+
 //取用dotenv設定檔
 if (process.env.NODE_ENV === 'development') {
   require('dotenv').config()
