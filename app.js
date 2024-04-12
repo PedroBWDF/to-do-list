@@ -3,6 +3,7 @@ const flash = require('connect-flash')
 const session = require('express-session')
 const app = express()
 
+const passport = require('passport')
 // require('dotenv').config()
 // console.log(process.env)
 
@@ -40,6 +41,7 @@ app.use(session({
 }))
 app.use(flash())
 
+app.use(passport.initialize())
 
 app.use(messageHandler)
 app.use(router)// 將 request 導入路由器
