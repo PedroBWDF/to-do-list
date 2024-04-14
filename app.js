@@ -42,6 +42,7 @@ app.use(session({
 app.use(flash())
 
 app.use(passport.initialize())
+app.use(passport.session())
 
 app.use(messageHandler)
 app.use(router)// 將 request 導入路由器
