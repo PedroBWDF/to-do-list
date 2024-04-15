@@ -39,6 +39,7 @@ passport.deserializeUser((user, done) => {
 // 準備引入路由模組
 const todos = require('./todos')
 const users = require('./users')
+const authHandler = require('../middlewares/auth-handler')
 
 
 
