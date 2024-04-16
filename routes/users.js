@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const bcrypt = require('bcryptjs')
 
 const db = require('../models')
 const User = db.User
@@ -25,7 +26,8 @@ router.post('/', (req, res) => {
       return
     }
 
-    return User.create({ email, password, name })
+    return bcrypt.hash(password, 10)
+      .then((hash) => User.create({ email, name, password: hash }))
   })
 
   //確保user被新增到DB
