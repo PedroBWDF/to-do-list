@@ -3,9 +3,8 @@ const flash = require('connect-flash')
 const session = require('express-session')
 const app = express()
 
-const passport = require('passport')
-// require('dotenv').config()
-// console.log(process.env)
+// // require('dotenv').config()
+// // console.log(process.env)
 
 //取用dotenv設定檔
 if (process.env.NODE_ENV === 'development') {
@@ -16,6 +15,7 @@ console.log(process.env.NODE_ENV)
 const { engine } = require('express-handlebars')
 const methodOverride = require('method-override')
 const router = require('./routes') // 引用路由器
+const passport = require('./config/passport')
 const messageHandler = require('./middlewares/message-handler')
 const errorHandler = require('./middlewares/error-handler')
 const port = 3000
